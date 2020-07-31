@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-package GoSpring
+package SpringRabbitMQ

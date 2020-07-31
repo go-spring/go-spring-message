@@ -16,6 +16,11 @@
 
 package SpringMessage
 
+import (
+	"context"
+)
+
+// Message 消息体
 type Message struct {
 	Topic      string
 	Key        string
@@ -23,16 +28,25 @@ type Message struct {
 	Properties map[string]string
 }
 
-//
-// 消息消费者
-//
+// Consumer 消息消费者
 type Consumer interface {
-	Consume(msg *Message)
+	Consume(ctx context.Context, msg *Message)
 }
 
-//
-// 消息生产者
-//
+type SendArg struct {
+	Properties map[string]string
+}
+
+type SendOption func(*SendArg)
+
+// WithProperties 携带 properties 属性值
+func WithProperties(properties map[string]string) SendOption {
+	return func(arg *SendArg) {
+		arg.Properties = properties
+	}
+}
+
+// Producer 消息生产者
 type Producer interface {
-	Send(topic string, body string) error
+	Send(ctx context.Context, topic string, body string, options ...SendOption) error
 }
