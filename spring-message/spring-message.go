@@ -20,12 +20,43 @@ import (
 	"context"
 )
 
-// Message 消息体
+// Message 简单消息
 type Message struct {
 	Topic      string
-	Key        string
-	Value      []byte
-	Properties map[string]string
+	Body       []byte            // 也叫 Value
+	MessageId  string            // 也叫 Key
+	Properties map[string]string // 附加的属性对
+}
+
+// NewMessage Message 的构造函数
+func NewMessage() *Message {
+	return &Message{
+		Properties: make(map[string]string),
+	}
+}
+
+// WithTopic 设置 Message 的 Topic
+func (msg *Message) WithTopic(topic string) *Message {
+	msg.Topic = topic
+	return msg
+}
+
+// WithBody 设置 Message 的消息体
+func (msg *Message) WithBody(body []byte) *Message {
+	msg.Body = body
+	return msg
+}
+
+// WithMessageId 设置 Message 的消息 ID
+func (msg *Message) WithMessageId(msgId string) *Message {
+	msg.MessageId = msgId
+	return msg
+}
+
+// AddProperty 给 Message 添加一个属性对
+func (msg *Message) AddProperty(key, value string) *Message {
+	msg.Properties[key] = value
+	return msg
 }
 
 // Consumer 消息消费者
@@ -33,20 +64,11 @@ type Consumer interface {
 	Consume(ctx context.Context, msg *Message)
 }
 
-type SendArg struct {
-	Properties map[string]string
-}
-
-type SendOption func(*SendArg)
-
-// WithProperties 携带 properties 属性值
-func WithProperties(properties map[string]string) SendOption {
-	return func(arg *SendArg) {
-		arg.Properties = properties
-	}
-}
+// MessageInterface 抽象化的消息接口
+type MessageInterface interface{}
 
 // Producer 消息生产者
 type Producer interface {
-	Send(ctx context.Context, topic string, body string, options ...SendOption) error
+	// SendMessage 发送消息，msg 类型不同用途也不同，需要实现方自行判断
+	SendMessage(ctx context.Context, msg MessageInterface) error
 }
