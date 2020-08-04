@@ -18,6 +18,9 @@ package SpringMessage
 
 import (
 	"context"
+	"encoding/json"
+
+	"github.com/go-spring/go-spring-parent/spring-utils"
 )
 
 // Message 简单消息
@@ -41,12 +44,6 @@ func (msg *Message) WithTopic(topic string) *Message {
 	return msg
 }
 
-// WithBody 设置 Message 的消息体
-func (msg *Message) WithBody(body []byte) *Message {
-	msg.Body = body
-	return msg
-}
-
 // WithMessageId 设置 Message 的消息 ID
 func (msg *Message) WithMessageId(msgId string) *Message {
 	msg.MessageId = msgId
@@ -59,8 +56,23 @@ func (msg *Message) AddProperty(key, value string) *Message {
 	return msg
 }
 
+// WithBody 设置 Message 的消息体
+func (msg *Message) WithBody(body []byte) *Message {
+	msg.Body = body
+	return msg
+}
+
+// WithJsonBody 设置 Message 的消息体 NOTE:到底应不应该抛可愁死我了!
+func (msg *Message) WithJsonBody(body interface{}) *Message {
+	data, err := json.Marshal(body)
+	SpringUtils.Panic(err).When(err != nil)
+	msg.Body = data
+	return msg
+}
+
 // Consumer 消息消费者
 type Consumer interface {
+	Topics() []string // 声明消费的主题列表
 	Consume(ctx context.Context, msg *Message)
 }
 
