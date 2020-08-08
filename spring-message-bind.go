@@ -22,7 +22,7 @@ import (
 	"errors"
 	"reflect"
 
-	"github.com/go-spring/go-spring-parent/spring-utils"
+	"github.com/go-spring/go-spring-utils"
 )
 
 // contextType context.Context 的反射类型

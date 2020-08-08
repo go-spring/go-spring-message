@@ -20,7 +20,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/go-spring/go-spring-parent/spring-utils"
+	"github.com/go-spring/go-spring-utils"
 )
 
 // Message 简单消息

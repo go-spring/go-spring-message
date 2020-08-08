@@ -2,4 +2,4 @@ module github.com/go-spring/go-spring-message
 
 go 1.12
 
-require github.com/go-spring/go-spring-parent v1.0.4-0.20200615061648-3687ec727ddf
+require github.com/go-spring/go-spring-utils v0.0.0-20200808140357-119aa665f28a
